@@ -1,0 +1,79 @@
+@import 'primeicons/primeicons.css';
+@import 'primereact/resources/primereact.css';
+@import 'primereact/resources/themes/saga-blue/theme.css';
+
+
+* {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 300;
+    font-size: large;
+}
+
+.container {
+    background-color: rgb(233, 247, 244);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 1fr;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+}
+
+.InputText {
+    margin: 5px;
+    padding: 10px;
+    width: 300px;
+}
+
+span {
+    margin-bottom: 30px;
+}
+
+.submit {
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    /* padding-top: 5px; */
+}
+
+.card-box {
+    width: 900px;
+}
+
+.Calendar {
+     margin: 5px;
+     width: 300px;
+}
+
+.radio {
+    margin: 0 5px;
+}
+
+.Dropdown {
+    margin: 5px;
+    padding: 2px;
+    width: 300px;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: larger;
+    text-align: center;
+}
+
+/* input:invalid {
+    border: 1px solid red;
+  } */
+
+.danger {
+    color: red;
+}  
