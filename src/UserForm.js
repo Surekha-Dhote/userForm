@@ -53,6 +53,11 @@ const UserForm = () => {
         return emailRegex.test(email);
     };
 
+    const validatePhone = (phone) => {
+        const phoneRegex = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i;
+        return phoneRegex.test(phone) && phone.length > 9;
+    }
+
     const validateFormData = (field) => {
         if (field === 'firstname' || field == 'lastname') {
             if (userData[field].length < 3) {
@@ -67,7 +72,8 @@ const UserForm = () => {
                 }));
             }
         } else if (field === 'phone') {
-            if (userData[field].length < 9) {
+            if (!validatePhone(userData[field])) {
+                console.log(!validatePhone(userData[field]));
                 setError((error) => ({
                     ...error,
                     [field]: `${field} number should be of 10 digits`
@@ -137,7 +143,7 @@ const UserForm = () => {
                                 <p className='danger'>{errors.lastname}</p>
                             </span>
                             <span className="p-float-label" >
-                                <InputText className="InputText" id="Phone No." name='phone' value={userData.phone} onChange={handleChange} required />
+                                <InputText className="InputText" id="Phone No." type="tel" name='phone' value={userData.phone} onChange={handleChange} required />
                                 <label htmlFor="Phone No.">Phone No.</label>
                                 <p className='danger'>{errors.phone}</p>
                             </span>
@@ -171,7 +177,6 @@ const UserForm = () => {
                                     </span>
                                 </div>
                             </span>
-
                             <span className="p-float-label" >
                                 <InputTextarea className="InputText" id="Description" name='description' value={userData.description} onChange={handleChange} required />
                                 <label htmlFor="Description">Description</label>
