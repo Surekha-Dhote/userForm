@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import UserForm from './UserForm';
+import UserForm from './components/UserForm';
 import './styles/primeReact.css';
 
 function App() {

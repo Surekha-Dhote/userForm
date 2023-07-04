@@ -9,23 +9,27 @@
     font-size: large;
 }
 
-.container {
+body {
     background-color: rgb(233, 247, 244);
+    padding: 30px;
+}
+
+.container {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-bottom: 25px;
+    margin-bottom: 5px;
     flex-wrap: wrap;
 }
 
 .card {
+    margin: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     flex-grow: 1fr;
     justify-content: space-between;
     align-items: center;
-    padding: 50px;
 }
 
 .InputText {
@@ -70,10 +74,20 @@ h1 {
     text-align: center;
 }
 
-/* input:invalid {
-    border: 1px solid red;
-  } */
+.highlight {
+    border: red 1px solid;
+}
 
 .danger {
     color: red;
 }  
+
+.input-box {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.radio-box {
+    width: 300px;
+}

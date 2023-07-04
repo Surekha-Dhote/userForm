@@ -25,7 +25,6 @@ const UserForm = () => {
         phone: '',
         email: '',
     });
-
     const roles = ['SE', 'SSE', 'ATL', 'TL', 'PH'];
     const education = [
         'High School',
@@ -35,6 +34,7 @@ const UserForm = () => {
         'PhD',
         'Other'
     ];
+    
     const handleSubmitForm = (e) => {
         e.preventDefault();
         const err = Object.keys(errors).filter((key) => {
@@ -53,17 +53,23 @@ const UserForm = () => {
         return emailRegex.test(email);
     };
 
-    const validatePhone = (phone) => {
+    const validatePhone = (value) => {
         const phoneRegex = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i;
-        return phoneRegex.test(phone) && phone.length > 9;
+        let phoneLength = false;
+        if (value.includes('+91') && value.length === 13) {
+            phoneLength = true;
+        } else if (value.length === 10) {
+            phoneLength = true;
+        }
+        return phoneRegex.test(value) && phoneLength;
     }
 
-    const validateFormData = (field) => {
+    const validateFormData = (field, value) => {
         if (field === 'firstname' || field == 'lastname') {
-            if (userData[field].length < 3) {
+            if (value.length < 3) {
                 setError((error) => ({
                     ...error,
-                    [field]: `${field} too short length should be more than 3`
+                    [field]: `${field} too short`
                 }));
             } else {
                 setError((error) => ({
@@ -72,8 +78,7 @@ const UserForm = () => {
                 }));
             }
         } else if (field === 'phone') {
-            if (!validatePhone(userData[field])) {
-                console.log(!validatePhone(userData[field]));
+            if (!validatePhone(value)) {
                 setError((error) => ({
                     ...error,
                     [field]: `${field} number should be of 10 digits`
@@ -85,7 +90,7 @@ const UserForm = () => {
                 }));
             }
         } else if (field === 'email') {
-            if (!validateEmail(userData[field])) {
+            if (!validateEmail(value)) {
                 setError((error) => ({
                     ...error,
                     [field]: `${field} invalid`
@@ -116,12 +121,12 @@ const UserForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({
-            ...userData,
+        setUserData((prevData) => ({
+            ...prevData,
             [name]: value,
-        })
+        }));
         if (name === 'firstname' || name === 'lastname' || name === 'phone' || name === 'email') {
-            validateFormData(name);
+            validateFormData(name, value);
         }
     };
 
@@ -132,54 +137,52 @@ const UserForm = () => {
                     <h1>User Form</h1>
                     <form onSubmit={handleSubmitForm}>
                         <div className='card'>
-                            <span className="p-float-label" >
-                                <InputText className="InputText" id="FirstName" name='firstname' value={userData.firstname} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label placeholder="FirstName">FirstName</label>
-                                <p className='danger'>{errors.firstname}</p>
+                                <InputText className={errors.firstname ? "InputText highlight" : "InputText"} id="FirstName" name='firstname' value={userData.firstname} onChange={handleChange} required />
+                                <small className='danger'>{errors.firstname}</small>
                             </span>
-                            <span className="p-float-label" >
-                                <InputText className="InputText" id="LastName" name="lastname" value={userData.lastname} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="LastName">LastName</label>
-                                <p className='danger'>{errors.lastname}</p>
+                                <InputText className={errors.lastname ? "InputText highlight" : "InputText"} id="LastName" name="lastname" value={userData.lastname} onChange={handleChange} required />
+                                <small className='danger'>{errors.lastname}</small>
                             </span>
-                            <span className="p-float-label" >
-                                <InputText className="InputText" id="Phone No." type="tel" name='phone' value={userData.phone} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="Phone No.">Phone No.</label>
-                                <p className='danger'>{errors.phone}</p>
+                                <InputText className={errors.phone ? "InputText highlight" : "InputText"} id="Phone No." type="tel" name='phone' value={userData.phone} onChange={handleChange} required />
+                                <small className='danger'>{errors.phone}</small>
                             </span>
-                            <span className="p-float-label" >
-                                <InputText className="InputText" id="Email" name='email' value={userData.email} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="Email">Email</label>
-                                <p className='danger'>{errors.email}</p>
+                                <InputText className={errors.email ? "InputText highlight" : "InputText"} id="Email" name='email' value={userData.email} onChange={handleChange} required />
+                                <small className='danger'>{errors.email}</small>
                             </span>
-                            <span className="p-float-label" >
-                                <InputText className="InputText" id="Dob" type='date' name='date_of_birth' value={userData.date_of_birth} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="Dob.">Dob</label>
+                                <InputText id="Dob" className='InputText' type='date' name='date_of_birth' value={userData.date_of_birth} onChange={handleChange} required />
                             </span>
-                            <span className="p-float-label" >
-                                <Dropdown className="Dropdown" id="Highest Education" name='high_education' options={education} value={userData.high_education} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="Highest Education">Highest Education</label>
+                                <Dropdown id="Highest Education" className='Dropdown' name='high_education' options={education} value={userData.high_education} onChange={handleChange} required />
                             </span>
-                            <span className="p-float-label" >
-                                <Dropdown className="Dropdown" id="Role" options={roles} name='role' value={userData.role} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="Role">Role</label>
+                                <Dropdown className="Dropdown" id="Role" options={roles} name='role' value={userData.role} onChange={handleChange} required />
                             </span>
-                            <span>
-                                <div className="InputText">
-                                    <label htmlFor="Gender" className='radio'>Gender</label>
-                                    <span className='radio' >
-                                        <input type='radio' id="Male" name="gender" value='Male' checked={userData.gender === 'Male'} onChange={handleChange} required />
-                                        <label htmlFor="Male" className="ml-2">Male</label>
-                                    </span>
-                                    <span className='radio'>
-                                        <input type='radio' id="Female" name="gender" value='Female' checked={userData.gender === 'Female'} onChange={handleChange} />
-                                        <label htmlFor="Female" className="ml-2">Female</label>
-                                    </span>
-                                </div>
+                            <span className="radio-box">
+                                <label htmlFor="Gender" className='radio'>Gender</label>
+                                <span className='radio' >
+                                    <input type='radio' id="Male" name="gender" value='Male' checked={userData.gender === 'Male'} onChange={handleChange} required />
+                                    <label htmlFor="Male" className="ml-2">Male</label>
+                                </span>
+                                <span className='radio'>
+                                    <input type='radio' id="Female" name="gender" value='Female' checked={userData.gender === 'Female'} onChange={handleChange} />
+                                    <label htmlFor="Female" className="ml-2">Female</label>
+                                </span>
                             </span>
-                            <span className="p-float-label" >
-                                <InputTextarea className="InputText" id="Description" name='description' value={userData.description} onChange={handleChange} required />
+                            <span className="input-box" >
                                 <label htmlFor="Description">Description</label>
+                                <InputTextarea id="Description" className='InputText' name='description' value={userData.description} onChange={handleChange} required />
                             </span>
                             <span >
                                 <label>Profile picture</label>
@@ -191,6 +194,11 @@ const UserForm = () => {
                     </form>
                 </Card>
             </div>
+            <Card className='container'>
+                <h1>
+                    User Data - 
+                </h1>
+            </Card>
         </>
     )
 };
