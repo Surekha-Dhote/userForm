@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import UserForm from './components/UserForm';
+import Dashboard from './components/Dashboard';
+import Feild from './components/IsolatedComponents/Feild';
 import './styles/primeReact.css';
 
 function App() {
   return (
       <div className="App">
-        <UserForm />
+        <Dashboard />
+        {/* <Feild /> */}
       </div>
   );
 }

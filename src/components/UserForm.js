@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea'
 import { Dropdown } from 'primereact/dropdown';
 
-const UserForm = () => {
+const UserForm = ({ addUser, data, saveEditedUser }) => {
     const [userData, setUserData] = useState({
         firstname: '',
         lastname: '',
@@ -18,6 +18,26 @@ const UserForm = () => {
         description: '',
         profile: '',
     });
+    const [edit, setEdit] = useState(false);
+
+    useEffect(() => {
+        if (data) {
+            setUserData(() => ({
+                ...userData, 
+                firstname: data?.firstname,
+                lastname: data?.lastname, 
+                phone: data?.phone, 
+                email: data?.email, 
+                date_of_birth: data?.date_of_birth, 
+                high_education: data?.high_education,
+                role: data?.role, 
+                gender: data?.gender, 
+                description: data?.description,
+                profile: data?.profile,
+            }));
+            setEdit(true);
+        }
+    }, [data])
 
     const [errors, setError] = useState({
         firstname: '',
@@ -34,14 +54,21 @@ const UserForm = () => {
         'PhD',
         'Other'
     ];
-    
+
     const handleSubmitForm = (e) => {
+        console.log('handleSubmitForm: ');
         e.preventDefault();
         const err = Object.keys(errors).filter((key) => {
             return errors[key] !== '';
         });
-        if (err.length === 0) {
+        if (err.length === 0 || userData.profile.name !== '') {
             console.log('User Data - ', userData);
+            console.log(data);
+            if(data === undefined || data === null){
+                addUser(userData);
+            } else {
+                saveEditedUser(userData);
+            }
             resetForm();
         } else {
             console.log('Errors in form');
@@ -117,6 +144,7 @@ const UserForm = () => {
             description: '',
             profile: '',
         });
+        setEdit(false);
     };
 
     const handleChange = (e) => {
@@ -127,6 +155,33 @@ const UserForm = () => {
         }));
         if (name === 'firstname' || name === 'lastname' || name === 'phone' || name === 'email') {
             validateFormData(name, value);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        if (e.target && e.target.files[0]) {
+            const type = e.target.files[0].type.split('/')[0];
+            if (type === 'image') {
+                const file = e.target && e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : null;
+                setUserData(data => ({
+                    ...data,
+                    profile: file ? URL.createObjectURL(e.target.files[0]) : ''
+                }));
+                setError((error) => ({
+                    ...error,
+                    'profile': ''
+                }));
+            } else {
+                setError((error) => ({
+                    ...error,
+                    'profile': `${type} format not allowed, please select image`
+                }));
+            }
+        } else {
+            setError((error) => ({
+                ...error,
+                'profile': `please select image`
+            }));
         }
     };
 
@@ -154,7 +209,7 @@ const UserForm = () => {
                             </span>
                             <span className="input-box" >
                                 <label htmlFor="Email">Email</label>
-                                <InputText className={errors.email ? "InputText highlight" : "InputText"} id="Email" name='email' value={userData.email} onChange={handleChange} required />
+                                <InputText className={errors.email ? "InputText highlight" : "InputText"} id="Email" name='email' value={userData.email} onChange={handleChange} required disabled = {edit}/>
                                 <small className='danger'>{errors.email}</small>
                             </span>
                             <span className="input-box" >
@@ -184,21 +239,18 @@ const UserForm = () => {
                                 <label htmlFor="Description">Description</label>
                                 <InputTextarea id="Description" className='InputText' name='description' value={userData.description} onChange={handleChange} required />
                             </span>
-                            <span >
+                            <span>
                                 <label>Profile picture</label>
                                 <br />
-                                <input type='file' name='profile' value={userData.profile} onChange={handleChange} required />
+                                <input type='file' className={errors.profile ? 'highlight' : ''} name='profile' onChange={handleFileChange} required />
+                                <br />
+                                <small className='danger'>{errors.profile}</small>
                             </span>
                             <Button type='submit' className='submit'>Submit</Button>
                         </div>
                     </form>
                 </Card>
             </div>
-            <Card className='container'>
-                <h1>
-                    User Data - 
-                </h1>
-            </Card>
         </>
     )
 };
